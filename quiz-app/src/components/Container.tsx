@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { QuestionsContext } from "../context/Questions-Context";
 import Modal from "./Modal";
 
-const TIMER = 3000;
+const TIMER = 10000;
 
 export default function Container() {
   const { questions, nextQuiz, modal } = useContext(QuestionsContext);
