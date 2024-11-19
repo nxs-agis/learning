@@ -1,6 +1,6 @@
-import CHART from "../../assets/img/chart.png";
-import MAP from "../../assets/img/map.png";
-import KEY from "../../assets/img/no-need.png";
+import CHART from "../../assets/img/chart.svg";
+import MAP from "../../assets/img/map.svg";
+import KEY from "../../assets/img/no-need.svg";
 
 export default [
   {

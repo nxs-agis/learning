@@ -17,10 +17,10 @@ export default function Header() {
           <h1 className={classesH1}>Clustering</h1>
         </div>
 
-        <p className="text-lg text-white font-semibold">
+        <p className="text-base lg:text-lg text-white font-semibold">
           A web application for earthquake clustering
         </p>
-        <button className="bg-[#031716] w-fit py-4 px-6 rounded-2xl text-white font-semibold">
+        <button className="bg-[#031716] w-fit text-xs lg:text-base py-4 px-6 rounded-2xl text-white font-semibold">
           <Link to={"/cluster"}>Cluster Now</Link>
         </button>
       </div>
