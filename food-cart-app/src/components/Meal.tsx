@@ -1,23 +1,31 @@
-import { MealTypes } from "../types/MealsTypes";
+import { useContext } from "react";
+import { currencyFormatter } from "../utils/formating";
+import Button from "./UI/Button";
+import cartContext from "../context/CartContext";
+import { CartType } from "../types/CartType";
 
 type Props = {
-  data: MealTypes;
-  onAdd: (name: string, price: number) => void;
+  data: CartType;
 };
 
-export default function Meal({ data, onAdd }: Props) {
+export default function Meal({ data }: Props) {
+  const { addItem } = useContext(cartContext);
+
   return (
-    <div key={data.id} className="meal-item">
-      <img src={`http://localhost:3000/${data.image}`} alt={data.name} />
-      <h3>{data.name}</h3>
-      <p className="meal-item-price">{data.price}</p>
-      <p className="meal-item-description">{data.description}</p>
-      <button
-        className="meal-item-action"
-        onClick={() => onAdd(data.name, +data.price)}
-      >
-        Add to Chart
-      </button>
-    </div>
+    <li key={data.id} className="meal-item">
+      <article>
+        <img src={`http://localhost:3000/${data.image}`} alt={data.name} />
+        <div>
+          <h3>{data.name}</h3>
+          <p className="meal-item-price">
+            {currencyFormatter.format(parseFloat(data.price))}
+          </p>
+          <p className="meal-item-description">{data.description}</p>
+        </div>
+        <p className="meal-item-actions">
+          <Button onClick={() => addItem(data)}>Add to Cart</Button>
+        </p>
+      </article>
+    </li>
   );
 }

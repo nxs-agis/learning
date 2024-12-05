@@ -1,60 +1,44 @@
-import { useEffect, useRef, useState } from "react";
 import Header from "./components/Header";
 import Meal from "./components/Meal";
-import { getMeals } from "./http";
-import { MealTypes } from "./types/MealsTypes";
-import ModalChart, { ModalChartRef } from "./components/ModalCart";
-import { CartType } from "./types/CartType";
+import { CartContextProvider } from "./context/CartContext";
+import { UserProgressContextProvider } from "./context/UserProgressContext";
+import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
+import useHttp from "./hooks/useHttp";
+import Error from "./components/Error";
+
+const requestConfig = {};
 
 function App() {
-  const [meal, setMeal] = useState<MealTypes[]>();
-  const [cart, setChart] = useState<CartType[]>([]);
-  const dialog = useRef<ModalChartRef>(null);
+  const {
+    data: loadedMeals,
+    isLoading,
+    error,
+  } = useHttp("http://localhost:3000/meals", requestConfig, []);
 
-  useEffect(() => {
-    async function fecthMeal() {
-      const getFecth = await getMeals();
-      setMeal(getFecth);
-    }
-
-    fecthMeal();
-  }, []);
-
-  function addItem(name: string, price: number) {
-    setChart((prev) => {
-      const exist = prev.find((item) => item.name === name);
-
-      if (exist) {
-        return prev.map((item) =>
-          item.name === name ? { ...item, total: item.total + 1 } : item
-        );
-      }
-      return [...prev, { name, price, total: 1 }];
-    });
-
-    console.log(cart);
+  if (isLoading) {
+    return <p className="center">Fetching meals... </p>;
   }
 
-  function openCart() {
-    dialog.current?.open();
-  }
-
-  function closeCart() {
-    dialog.current?.close();
+  if (error) {
+    return <Error title="Failed to fetch meals" message={error} />;
   }
 
   return (
-    <>
-      <Header cart={cart ? cart.length : 0} handlerCart={openCart} />
-      <main>
-        <ModalChart ref={dialog} cart={cart} onClose={closeCart} />
-        <div id="meals">
-          {meal?.map((data) => (
-            <Meal key={data.id} data={data} onAdd={addItem} />
-          ))}
-        </div>
-      </main>
-    </>
+    <UserProgressContextProvider>
+      <CartContextProvider>
+        <Header />
+        <main>
+          <ul id="meals">
+            {loadedMeals?.map((data) => (
+              <Meal key={data.id} data={data} />
+            ))}
+          </ul>
+        </main>
+        <Cart />
+        <Checkout />
+      </CartContextProvider>
+    </UserProgressContextProvider>
   );
 }
 
